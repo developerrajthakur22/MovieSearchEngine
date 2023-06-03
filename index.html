@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Web Movie App</title>
+    <style>
+      /* Write necessery styles here  */
+      #search-btn{
+        height: 30px;
+      }
+      #search-inp{
+        height: 25px;
+      }
+      #search{
+        text-align: center;
+      }
+      #movie_container{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="search">
+      <input type="text" id="search-inp" placeholder="Search"/>
+      <button id="search-btn">Search</button>
+    </div>
+    <div id="movie_container"></div>
+  </body>
+
+  <script>
+    // Write necessery JS here
+    let inputTag = document.getElementById("search-inp")
+    let button = document.getElementById("search-btn")
+
+    button.addEventListener("click", ()=>{
+       fetch(`https://www.omdbapi.com/?apiKey=cfcead9e&s=${inputTag.value}`)
+       .then((data)=>{
+         return data.json()
+
+       }).then((movie)=>{
+         showData(movie)  
+         console.log(movie)
+
+       }).catch((err) => {
+         errorCall()
+      }); 
+    })
+
+  function showData(data){
+    
+     document.getElementById("movie_container").innerHTML = "" 
+
+     data.Search.map(element => {
+       let movieCard = document.createElement("div")
+       movieCard.style.border = "2px solid black"
+       movieCard.style.width = "350px"
+
+       let poster = document.createElement("img")
+       poster.src = element.Poster
+       
+       let name = document.createElement("h2")
+       name.innerText = element.Title
+ 
+       movieCard.append(poster,name)
+
+       document.getElementById("movie_container").append(movieCard)
+
+     });
+
+     }
+
+//error function
+
+ function errorCall(){
+  let err = document.createElement("h2")
+  err.className = "error-container"
+  err.textContent = "Movie not found!"
+
+  document.body.append(err)
+ }
+
+  </script>
+</html>
